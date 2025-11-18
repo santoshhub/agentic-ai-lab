@@ -1,0 +1,24 @@
+# macOS junk
+.DS_Store
+**/.DS_Store
+
+# Python cache
+__pycache__/
+**/__pycache__/
+*.pyc
+
+# Virtualenvs / local env
+.venv/
+env/
+venv/
+llm/
+
+# Google / OAuth secrets
+credentials.json
+**/credentials.json
+token.pickle
+**/token.pickle
+
+# Build / lock / zip artifacts (optional)
+uv.lock
+*.zip

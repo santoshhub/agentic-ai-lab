@@ -1,0 +1,81 @@
+# config/assistant_tasks.yaml
+
+meeting_crafter_task:
+  description: >
+    Analyze user's question: {question}, and extract required fields for a meeting.
+    Output a JSON object with keys: summary, location, description, start, end, attendees.
+    Use the current date: {current_date} for scheduling. If any field is missing, use an empty string.
+    The output must be valid JSON only, no prose.
+  expected_output: >
+    {
+      "summary": "Meeting title",
+      "location": "",
+      "description": "",
+      "start": "YYYY-MM-DDTHH:MM:SS",
+      "end": "YYYY-MM-DDTHH:MM:SS",
+      "attendees": ["email@example.com"]
+    }
+  agent: meeting_scheduler_assistant
+  return_direct: true
+  max_iter: 1
+  temperature: 0.0
+
+meeting_scheduler_task:
+  description: >
+    Using the JSON object produced by meeting_crafter_task, schedule a new event
+    in Google Calendar through the scheduling tool. You must call the tool and
+    return the tool output directly (no extra reasoning).
+  expected_output: >
+    {"status": "success", "id": "string", "summary": "string",
+     "start": "YYYY-MM-DDTHH:MM:SS±HH:MM", "end": "YYYY-MM-DDTHH:MM:SS±HH:MM",
+     "htmlLink": "string"}
+  agent: meeting_creator_agent
+  depends_on: [meeting_crafter_task]
+  return_direct: true
+  max_iter: 1
+  temperature: 0.0
+
+dateinterpreter_task:
+  description: >
+    Interpret any dates or times mentioned in the user's question: {question}.
+    Convert them to explicit start and end times like "Month DD, YYYY, HH:MMAM/PM".
+    Return only JSON.
+  expected_output: >
+    {
+      "start": "Month DD, YYYY, HH:MMAM/PM",
+      "end": "Month DD, YYYY, HH:MMAM/PM"
+    }
+  agent: availability_checker_assistant
+  return_direct: true
+  max_iter: 1
+  temperature: 0.0
+
+availability_checker_task:
+  description: >
+    Use the interpreted dates from dateinterpreter_task and check the user's
+    available time slots using the calendar availability tool.
+    Return the free slots summary only.
+  expected_output: >
+    [
+      {"date": "YYYY-MM-DD", "available": [["HH:MM:SS","HH:MM:SS"]]}
+    ]
+  agent: availability_checker_assistant
+  depends_on: [dateinterpreter_task]
+  return_direct: true
+  max_iter: 1
+  temperature: 0.0
+
+event_checker_task:
+  description: >
+    Check the user's events between the interpreted start and end dates using
+    the Google Calendar event checker tool.
+    Return all events with date and summary.
+  expected_output: >
+    [
+      {"summary": "string", "start": "ISO8601"}
+    ]
+  agent: event_checker_assistant
+  depends_on: [dateinterpreter_task]
+  return_direct: true
+  max_iter: 1
+  temperature: 0.0

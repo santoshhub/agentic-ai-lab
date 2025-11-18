@@ -1,0 +1,28 @@
+# config/manager_tasks.yaml
+project_manager_task:
+  description: >
+    You are the PROJECT MANAGER agent.
+    Your job is to read and understand the user's question: {question},
+    and decide which assistant agent should handle it.
+    You must choose exactly ONE of the following options:
+
+    - meeting_scheduler_assistant → handles meeting creation or scheduling.
+    - availability_checker_assistant → checks the user's availability / free time.
+    - event_checker_assistant → checks existing or upcoming calendar events.
+
+    Think briefly about what the user is asking for and select the best fit.
+    Provide your answer as a JSON object, with an explanation.
+
+    IMPORTANT RULES:
+    - Only one agent may be selected.
+    - Do NOT include any extra commentary or markdown.
+    - Output must be strictly valid JSON matching the expected schema.
+  expected_output: >
+    {
+      "agent": "<one of: meeting_scheduler_assistant | availability_checker_assistant | event_checker_assistant>",
+      "reason": "<1–3 sentence explanation of why this agent is appropriate>"
+    }
+  agent: project_manager
+  return_direct: true
+  max_iter: 1
+  temperature: 0.0

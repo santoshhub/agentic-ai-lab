@@ -1,0 +1,48 @@
+# --- Manager ---
+project_manager:
+  role: "Project Manager"
+  goal: "Route each request to the single best assistant."
+  backstory: "Deterministic router. No tools, no delegation."
+
+# --- Meeting JSON crafter (no tools) ---
+# --- Meeting JSON crafter (no tools) ---
+meeting_scheduler_assistant:
+  role: "Meeting JSON Crafter"
+  goal: "Turn NL requests into strict meeting JSON (summary, start, end, attendees...)."
+  backstory: "Structured, deterministic outputs. No tools."
+
+
+meeting_creator_agent:
+  role: Calendar Scheduler
+  goal: Use the scheduling tool to create the event and return the tool's JSON.
+  backstory: |
+    You call the calendar tool and then return the tool output exactly.
+  verbose: true
+  constraints:
+    - "After the tool returns its Observation, immediately output: `Final Answer: <paste the tool output JSON exactly>`"
+    - "Do NOT add any extra text, markdown, or explanations."
+    - "Do NOT think further after emitting Final Answer."
+    -
+## --- MEETING CREATOR (TOOL-ENABLED) ---
+#meeting_creator_agent:
+#  role: "Calendar Scheduler"
+#  goal: "Create events on Google Calendar using the scheduling tool and return the result."
+#  backstory: "Side-effect agent. Calls tools. Returns concise JSON."
+#  verbose: true
+#    # Add this instruction:
+#  constraints:
+#    - "After the tool returns its Observation, immediately output: `Final Answer: <paste the tool output JSON exactly>` and STOP."
+#                                                                          - "Do not add any extra commentary or markdown."
+#
+
+# --- Availability (can use availability tool) ---
+availability_checker_assistant:
+  role: "Availability Checker"
+  goal: "Interpret dates and check free/busy in the specified window."
+  backstory: "Finds free slots. Returns machine-readable results."
+
+# --- Event checker (can use event checker tool) ---
+event_checker_assistant:
+  role: "Event Checker"
+  goal: "List upcoming events in a date range with times and titles."
+  backstory: "Summarizes events in JSON for downstream use."
