@@ -1,6 +1,6 @@
 # 🚀 CrewAI Calendar Assistant — Multi‑Agent + Google Calendar + Ollama
 
-![License](https://img.shields.io/badge/license-MIT-green)
+![License](https://img.shields.io/badge/license-green)
 ![Python](https://img.shields.io/badge/python-3.11-blue)
 ![CrewAI](https://img.shields.io/badge/CrewAI-MultiAgent-orange)
 ![Ollama](https://img.shields.io/badge/Ollama-LocalLLM-purple)
@@ -230,7 +230,3 @@ System produces structured JSON → schedules the meeting → confirms back.
 - Add UI (Streamlit)  
 
 ---
-
-# 📄 License
-
-MIT © 2025 Santosh Shahane
